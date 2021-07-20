@@ -23,6 +23,7 @@ License
 
 \*---------------------------------------------------------------------------*/
 
+#include <chrono>
 #include "LduMatrix.H"
 #include "diagTensorField.H"
 #include "Residuals.H"
@@ -186,7 +187,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
         solverPerformance solverPerf;
 
         // Solver call
-        Info<<"fvMatrixSolve.C::solveSegregated::189" << endl;
+        // Info<<"fvMatrixSolve.C::solveSegregated::189" << endl;
         solverPerf = lduMatrix::solver::New
         (
             psi.name() + pTraits<Type>::componentNames[cmpt],
@@ -259,7 +260,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
         )
     );
 
-    Info<<"fvMatrixSolve.C::solveCoupled::262" << endl;
+    // Info<<"fvMatrixSolve.C::solveCoupled::262" << endl;
     SolverPerformance<Type> solverPerf
     (
         coupledMatrixSolver->solve(psi)
@@ -282,6 +283,7 @@ template<class Type>
 Foam::autoPtr<typename Foam::fvMatrix<Type>::fvSolver>
 Foam::fvMatrix<Type>::solver()
 {
+    // Info<<"fvMatrixSolve.C::solver()::285" << endl;
     return solver
     (
         psi_.mesh().solverDict
@@ -299,6 +301,7 @@ Foam::fvMatrix<Type>::solver()
 template<class Type>
 Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::fvSolver::solve()
 {
+    // Info<<"fvMatrixSolve.C::solver()::303" << endl;
     return solve
     (
         fvMat_.psi_.mesh().solverDict
@@ -316,6 +319,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::fvSolver::solve()
 template<class Type>
 Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve(const word& name)
 {
+    //Info<<"fvMatrixSolve.C::solve()::321" << endl;
     return solve
     (
         psi_.mesh().solverDict
@@ -332,7 +336,8 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve(const word& name)
 template<class Type>
 Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve()
 {
-    return solve
+    auto start = std::chrono::steady_clock::now();
+    auto ret = solve
     (
         psi_.mesh().solverDict
         (
@@ -346,6 +351,9 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve()
             )
         )
     );
+    auto end = std::chrono::steady_clock::now();
+    Info << "linear solve " << psi_.name() << " " << std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count() << endl;
+    return ret;
 }
 
 
