@@ -186,6 +186,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveSegregated
         solverPerformance solverPerf;
 
         // Solver call
+        Info<<"fvMatrixSolve.C::solveSegregated::189" << endl;
         solverPerf = lduMatrix::solver::New
         (
             psi.name() + pTraits<Type>::componentNames[cmpt],
@@ -258,6 +259,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solveCoupled
         )
     );
 
+    Info<<"fvMatrixSolve.C::solveCoupled::262" << endl;
     SolverPerformance<Type> solverPerf
     (
         coupledMatrixSolver->solve(psi)
