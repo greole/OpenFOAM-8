@@ -352,7 +352,7 @@ Foam::SolverPerformance<Type> Foam::fvMatrix<Type>::solve()
         )
     );
     auto end = std::chrono::steady_clock::now();
-    Info << "linear solve " << psi_.name() << " " << std::chrono::duration_cast<std::chrono::nanoseconds>(end-start).count() << endl;
+    Info << "linear solve " << psi_.name() << " " << std::chrono::duration_cast<std::chrono::microseconds>(end-start).count() << endl;
     return ret;
 }
 
